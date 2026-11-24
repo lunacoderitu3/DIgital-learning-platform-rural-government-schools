@@ -1,8 +1,13 @@
 # Digital Learning Platform for Rural Government Schools
 
+> **Developed by Ritu | CMRIT (CMR Institute of Technology)**  
+> © 2026 Ritu. All rights reserved.
+
 A complete school management and digital learning platform built with **Laravel 10**. It helps schools manage students, teachers, classes, attendance, examinations, fees, assignments, announcements, communication, and online learning activities from a centralized dashboard.
 
 > Designed for rural government schools, with multi-school/SaaS support and role-based access.
+
+> **Copyright Notice:** This project, its source code, design, and documentation are the intellectual property of Ritu. Unauthorized copying, redistribution, modification, commercial use, or publication of any part of this project is prohibited. Academic use is allowed only with the explicit permission of the owner.
 
 ## Key Features
 
@@ -55,8 +60,8 @@ A complete school management and digital learning platform built with **Laravel 
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/<your-username>/<your-repository>.git
-cd <your-repository>
+git clone https://github.com/lunacoderitu3/DIgital-learning-platform-rural-government-schools.git
+cd DIgital-learning-platform-rural-government-schools
 ```
 
 ### 2. Install PHP dependencies
@@ -250,26 +255,26 @@ tests/        Unit and feature tests
 
 ## Contributing
 
-Contributions are welcome.
+Contributions are not accepted through public forks or pull requests unless written permission is granted by the owner.
 
-1. Fork the repository.
-2. Create a feature branch.
+For academic, educational, or collaboration requests, contact the project owner before copying or modifying the project.
 
-   ```bash
-   git checkout -b feature/your-feature
-   ```
+## License and Usage
 
-3. Commit your changes.
-4. Push the branch.
-5. Open a Pull Request.
+This is a **copyright-protected project**. No open-source license is granted.
 
-## License
+- Personal viewing on GitHub is permitted.
+- Copying, downloading for reuse, modifying, redistributing, sublicensing, or commercial use is prohibited without written permission.
+- The project may not be presented or submitted as an original project by anyone other than the authorized developer.
 
-This project is licensed under the [MIT License](LICENSE).
+© 2026 Ritu. All rights reserved.
 
-## Author
+## Developer
 
-Add your name, organization, and contact details here.
+- **Developer:** Ritu
+- **College:** CMRIT (CMR Institute of Technology)
+- **Project:** Digital Learning Platform for Rural Government Schools
+- **GitHub:** [lunacoderitu3](https://github.com/lunacoderitu3)
 
 ## Support
 
