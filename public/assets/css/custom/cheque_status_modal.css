@@ -1,0 +1,435 @@
+/* ============================================================
+   Cheque / Manual payment status modal
+   Bootstrap 4 compatible | matches the Pay Compulsory Fees UI
+   ============================================================ */
+
+.chq-modal {
+    --chq-radius-lg: 16px;
+    --chq-radius-md: 12px;
+    --chq-radius-sm: 9px;
+    --chq-border: #e2e8f0;
+    --chq-bg: #f8fafc;
+    --chq-text: #0f172a;
+    --chq-text-2: #64748b;
+    --chq-text-3: #94a3b8;
+    --chq-brand: var(--theme-color, #0284c7);
+    --chq-emerald: #059669;
+    --chq-amber: #b45309;
+    --chq-rose: #e11d48;
+}
+
+.chq-modal .modal-dialog {
+    max-width: 740px;
+}
+
+.chq-modal .modal-content {
+    border: 0;
+    border-radius: var(--chq-radius-lg);
+    overflow: hidden;
+    box-shadow: 0 24px 60px -12px rgba(15, 23, 42, 0.28);
+}
+
+/* --- Header --- */
+.chq-header {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+    padding: 1.125rem 1.5rem;
+    background: var(--chq-brand);
+    color: #fff;
+}
+
+.chq-header-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: var(--chq-radius-md);
+    background: rgba(255, 255, 255, 0.16);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.0625rem;
+    flex-shrink: 0;
+}
+
+.chq-header-text {
+    flex-grow: 1;
+    min-width: 0;
+}
+
+.chq-header-text h5 {
+    margin: 0;
+    font-size: 1.0625rem;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.3;
+}
+
+.chq-header-sub {
+    margin: 0.125rem 0 0;
+    font-size: 0.78125rem;
+    color: rgba(255, 255, 255, 0.78);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.chq-close {
+    border: 0;
+    background: rgba(255, 255, 255, 0.14);
+    color: #fff;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    line-height: 1;
+    opacity: 1;
+    flex-shrink: 0;
+    transition: background 0.15s ease;
+}
+
+.chq-close:hover {
+    background: rgba(255, 255, 255, 0.28);
+    color: #fff;
+}
+
+/* --- Body --- */
+.chq-body {
+    background: var(--chq-bg);
+    padding: 1.25rem 1.5rem;
+    max-height: 68vh;
+    overflow-y: auto;
+}
+
+.chq-card {
+    background: #fff;
+    border: 1px solid var(--chq-border);
+    border-radius: var(--chq-radius-md);
+    padding: 1rem 1.125rem;
+    margin-bottom: 1rem;
+}
+
+.chq-label {
+    display: block;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--chq-text-3);
+    margin-bottom: 0.125rem;
+}
+
+.chq-value {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--chq-text);
+    word-break: break-word;
+}
+
+.chq-section-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--chq-text-2);
+    margin: 0 0 0.625rem;
+}
+
+/* --- Student strip --- */
+.chq-student {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+    padding-bottom: 0.875rem;
+    margin-bottom: 0.875rem;
+    border-bottom: 1px solid var(--chq-border);
+}
+
+.chq-avatar {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: var(--chq-bg);
+    border: 1px solid var(--chq-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: var(--chq-brand);
+    flex-shrink: 0;
+}
+
+.chq-student-name {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--chq-text);
+    line-height: 1.3;
+}
+
+.chq-student-meta {
+    font-size: 0.8125rem;
+    color: var(--chq-text-2);
+    margin: 0;
+}
+
+.chq-total {
+    text-align: right;
+    margin-left: auto;
+    flex-shrink: 0;
+}
+
+.chq-total-value {
+    font-size: 1.375rem;
+    font-weight: 700;
+    color: var(--chq-text);
+    line-height: 1.2;
+    white-space: nowrap;
+}
+
+/* --- Meta grid --- */
+.chq-meta-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.875rem 1rem;
+}
+
+/* --- Status pills --- */
+.chq-pill {
+    display: inline-block;
+    padding: 0.1875rem 0.625rem;
+    border-radius: 999px;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+}
+
+.chq-pill-pending {
+    background: #fffbeb;
+    color: var(--chq-amber);
+    border: 1px solid #fde68a;
+}
+
+.chq-pill-success {
+    background: #ecfdf5;
+    color: var(--chq-emerald);
+    border: 1px solid #a7f3d0;
+}
+
+.chq-pill-failed {
+    background: #fff1f2;
+    color: var(--chq-rose);
+    border: 1px solid #fecdd3;
+}
+
+/* --- Covered fees list --- */
+.chq-fee-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.625rem 0;
+    border-bottom: 1px dashed var(--chq-border);
+}
+
+.chq-fee-row:last-of-type {
+    border-bottom: 0;
+}
+
+.chq-fee-index {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--chq-bg);
+    border: 1px solid var(--chq-border);
+    color: var(--chq-text-2);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.chq-fee-name {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--chq-text);
+}
+
+.chq-fee-due {
+    font-size: 0.75rem;
+    color: var(--chq-text-3);
+}
+
+.chq-fee-amounts {
+    margin-left: auto;
+    text-align: right;
+    flex-shrink: 0;
+}
+
+.chq-fee-amount {
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: var(--chq-text);
+    white-space: nowrap;
+}
+
+.chq-fee-charge {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--chq-rose);
+    white-space: nowrap;
+}
+
+.chq-fee-total {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--chq-border);
+    font-weight: 700;
+    color: var(--chq-text);
+}
+
+.chq-hint {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    margin-top: 0.875rem;
+    padding: 0.625rem 0.75rem;
+    border-radius: var(--chq-radius-sm);
+    background: rgba(2, 132, 199, 0.06);
+    color: var(--chq-text-2);
+    font-size: 0.78125rem;
+    line-height: 1.45;
+}
+
+.chq-hint i {
+    color: var(--chq-brand);
+    margin-top: 0.125rem;
+}
+
+/* --- Status choice --- */
+.chq-status-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 0.875rem;
+}
+
+.chq-status-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.chq-status-opt {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.375rem;
+    border: 1.5px solid var(--chq-border);
+    border-radius: 999px;
+    background: #fff;
+    padding: 0.375rem 0.875rem;
+    font-size: 0.78125rem;
+    font-weight: 600;
+    line-height: 1.4;
+    color: var(--chq-text-2);
+    cursor: pointer;
+    transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+    margin: 0;
+}
+
+.chq-status-opt i {
+    font-size: 0.8125rem;
+}
+
+.chq-status-opt:hover {
+    border-color: #cbd5e1;
+}
+
+.chq-status-opt.active[data-value="pending"] {
+    border-color: #f59e0b;
+    background: #fffbeb;
+    color: var(--chq-amber);
+}
+
+.chq-status-opt.active[data-value="success"] {
+    border-color: var(--chq-emerald);
+    background: #ecfdf5;
+    color: #047857;
+}
+
+.chq-status-opt.active[data-value="bounced"] {
+    border-color: var(--chq-rose);
+    background: #fff1f2;
+    color: #be123c;
+}
+
+.chq-modal .chq-body .form-control {
+    border-radius: var(--chq-radius-sm);
+    border-color: var(--chq-border);
+    font-size: 0.875rem;
+}
+
+.chq-modal .chq-body textarea.form-control {
+    resize: vertical;
+}
+
+.chq-receipt-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--chq-brand);
+}
+
+/* --- Footer --- */
+.chq-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.625rem;
+    padding: 1rem 1.5rem;
+    background: #fff;
+    border-top: 1px solid var(--chq-border);
+}
+
+.chq-footer .btn {
+    border-radius: var(--chq-radius-sm);
+    font-weight: 600;
+    padding: 0.5rem 1.25rem;
+}
+
+.chq-loader {
+    text-align: center;
+    color: var(--chq-text-3);
+    padding: 2.25rem 0;
+    font-size: 0.875rem;
+}
+
+@media (max-width: 767.98px) {
+    .chq-meta-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .chq-student {
+        flex-wrap: wrap;
+    }
+
+    .chq-total {
+        text-align: left;
+        margin-left: 0;
+        width: 100%;
+    }
+
+    .chq-status-opt {
+        flex: 1 1 100%;
+    }
+}

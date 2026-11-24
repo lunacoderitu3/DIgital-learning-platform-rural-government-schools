@@ -1,0 +1,581 @@
+/* ==========================================================================
+   QR Staff Attendance — admin panel styles
+   Sits on top of the existing theme; only adds what the theme has no class for.
+   ========================================================================== */
+
+/* --------------------------------------------------------- readiness list */
+.qr-checklist {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.qr-checklist li {
+    display: flex;
+    align-items: flex-start;
+    gap: 9px;
+    font-size: 13.5px;
+    line-height: 1.45;
+}
+
+.qr-checklist li .fa {
+    font-size: 15px;
+    margin-top: 2px;
+    flex: 0 0 15px;
+}
+
+.qr-checklist li.ok .fa {
+    color: #1E8E6A;
+}
+
+.qr-checklist li.bad .fa {
+    color: #CF4A45;
+}
+
+.qr-checklist li.bad {
+    color: #A5322E;
+}
+
+.qr-checklist li small {
+    display: block;
+    color: #64798A;
+    font-size: 11.5px;
+    margin-top: 1px;
+}
+
+/* --------------------------------------------------------- key / value list */
+.qr-kv {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 6px 14px;
+    margin: 0;
+    font-size: 12.5px;
+}
+
+.qr-kv dt {
+    color: #64798A;
+    font-weight: 400;
+    margin: 0;
+}
+
+.qr-kv dd {
+    margin: 0;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+/* --------------------------------------------------------- QR frame */
+.qr-frame {
+    display: inline-block;
+    padding: 12px;
+    border: 1px solid #DEE7ED;
+    border-radius: 8px;
+    background: #fff;
+    line-height: 0;
+}
+
+.qr-frame svg {
+    display: block;
+    width: 190px;
+    height: 190px;
+}
+
+/* --------------------------------------------------------- location picker */
+.qr-map-wrap {
+    position: relative;
+    height: 340px;
+    border: 1px solid #DEE7ED;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #EDF1EC;
+}
+
+.qr-map-canvas {
+    position: absolute;
+    inset: 0;
+}
+
+/* Stands in until an API key loads the live map. Same geometry as the real
+   thing so the radius control still means something. */
+.qr-map-preview {
+    position: absolute;
+    inset: 0;
+    background:
+        repeating-linear-gradient(0deg, transparent 0 43px, #E4E9E4 43px 44px),
+        repeating-linear-gradient(90deg, transparent 0 58px, #E4E9E4 58px 59px),
+        #EDF1EC;
+}
+
+.qr-map-wrap.is-live .qr-map-preview {
+    display: none;
+}
+
+.qr-map-preview .qr-pv-circle {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 130px;
+    height: 130px;
+    transform: translate(-50%, -50%);
+    border: 2px solid #22577A;
+    background: rgba(34, 87, 122, .12);
+    border-radius: 50%;
+    transition: width .15s ease, height .15s ease;
+}
+
+.qr-map-preview .qr-pv-pin {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -100%);
+    color: #22577A;
+    font-size: 30px;
+    line-height: 1;
+    z-index: 2;
+}
+
+.qr-map-preview .qr-pv-flag {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: rgba(255, 255, 255, .95);
+    border: 1px solid #DEE7ED;
+    border-radius: 999px;
+    padding: 4px 11px;
+    font-size: 11.5px;
+    color: #3A4B58;
+}
+
+.qr-map-note {
+    position: absolute;
+    left: 12px;
+    bottom: 12px;
+    z-index: 3;
+    background: rgba(255, 255, 255, .95);
+    border: 1px solid #DEE7ED;
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-size: 11.5px;
+    color: #3A4B58;
+    font-variant-numeric: tabular-nums;
+}
+
+/* --------------------------------------------------------- day ribbon
+   One horizontal track per staff-day: the shift window as a striped band,
+   completed sessions as solid bars, an unmatched punch in as a dashed bar. */
+.qr-ribbon {
+    position: relative;
+    height: 26px;
+    border-radius: 5px;
+    background: #F1F5F8;
+    overflow: hidden;
+    min-width: 200px;
+}
+
+.qr-ribbon .rb-shift {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    background: repeating-linear-gradient(135deg, #E3EDF3 0 4px, #DCE8F0 4px 8px);
+}
+
+.qr-ribbon .rb-session {
+    position: absolute;
+    top: 6px;
+    bottom: 6px;
+    background: #1E8E6A;
+    border-radius: 3px;
+}
+
+.qr-ribbon .rb-session.is-uncounted {
+    background: #B9C8D2;
+}
+
+.qr-ribbon .rb-open {
+    position: absolute;
+    top: 6px;
+    bottom: 6px;
+    background: #FBE9E8;
+    border: 1px dashed #CF4A45;
+    border-radius: 3px;
+    min-width: 10px;
+}
+
+.qr-ribbon .rb-now {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #D98A16;
+}
+
+.qr-ribbon-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    font-size: 11.5px;
+    color: #64798A;
+}
+
+.qr-ribbon-legend span {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.qr-ribbon-legend i {
+    width: 12px;
+    height: 10px;
+    border-radius: 2px;
+    display: inline-block;
+}
+
+/* --------------------------------------------------------- punch timeline */
+.qr-punch-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.qr-punch-list li {
+    display: grid;
+    grid-template-columns: 52px 26px 1fr;
+    gap: 10px;
+    align-items: start;
+    padding: 9px 0;
+    border-bottom: 1px solid #EBF1F5;
+    font-size: 13px;
+}
+
+.qr-punch-list li:last-child {
+    border-bottom: 0;
+}
+
+.qr-punch-list .p-time {
+    font-variant-numeric: tabular-nums;
+    color: #3A4B58;
+}
+
+.qr-punch-list .p-node {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: #E6F4EF;
+    color: #1E8E6A;
+    font-size: 12px;
+}
+
+.qr-punch-list .p-node.out {
+    background: #EEF4F8;
+    color: #22577A;
+}
+
+.qr-punch-list .p-node.missing {
+    background: #FBE9E8;
+    color: #CF4A45;
+}
+
+.qr-punch-list .p-meta {
+    display: block;
+    color: #64798A;
+    font-size: 11.5px;
+    margin-top: 2px;
+}
+
+/* --------------------------------------------------------- status pills */
+.qr-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 2px 9px;
+    border-radius: 999px;
+    font-size: 11.5px;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.qr-pill-present {
+    background: #E6F4EF;
+    color: #14684D;
+}
+
+.qr-pill-halfday {
+    background: #FBF1DF;
+    color: #96610D;
+}
+
+.qr-pill-absent {
+    background: #FBE9E8;
+    color: #A5322E;
+}
+
+.qr-pill-holiday {
+    background: #EDF1F4;
+    color: #56677A;
+}
+
+.qr-pill-leave {
+    background: #EDEBFC;
+    color: #493CB0;
+}
+
+.qr-pill-open {
+    background: #FBE9E8;
+    color: #A5322E;
+}
+
+.qr-pill-qr {
+    background: #EEF4F8;
+    color: #17405C;
+}
+
+.qr-pill-manual {
+    background: #FBF1DF;
+    color: #96610D;
+}
+
+/* --------------------------------------------------------- input group styling */
+.input-group {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    width: 100%;
+}
+
+.input-group > .form-control {
+    position: relative;
+    flex: 1 1 auto;
+    width: 1%;
+    min-width: 0;
+    margin-bottom: 0;
+}
+
+.input-group > .form-control:not(:last-child) {
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+}
+
+.input-group > .form-control:not(:first-child) {
+    border-top-left-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+}
+
+.input-group > .input-group-text {
+    display: flex;
+    align-items: center;
+    padding: 0.6rem 0.95rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1;
+    color: #495057;
+    text-align: center;
+    white-space: nowrap;
+    background-color: #f1f5f9;
+    border: 1px solid #c9ccd0;
+    border-radius: 4px;
+}
+
+.input-group > .input-group-text:not(:first-child) {
+    border-top-left-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+    border-left: 0;
+}
+
+.input-group > .btn {
+    position: relative;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.6rem 1.1rem;
+    font-size: 0.875rem;
+    line-height: 1;
+    white-space: nowrap;
+    border-radius: 4px;
+}
+
+.input-group > .btn:not(:first-child) {
+    border-top-left-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+}
+
+.input-group > .btn:not(:last-child) {
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+    margin-right: -1px;
+}
+
+.input-group > .btn-outline-secondary {
+    border-color: #c9ccd0;
+    color: #556270;
+    background-color: #f8fafc;
+}
+
+.input-group > .btn-outline-secondary:hover {
+    background-color: #e2e8f0;
+    border-color: #b0b7be;
+    color: #1e293b;
+}
+
+.input-group:focus-within > .input-group-text {
+    border-color: var(--theme-color, #22577A);
+}
+
+/* --------------------------------------------------------- calculation mode cards */
+.qr-calc-options {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.qr-calc-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 16px 18px;
+    border: 2px solid #E2E8F0;
+    border-radius: 10px;
+    background: #FFFFFF;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    height: 100%;
+    margin-bottom: 0;
+    position: relative;
+    user-select: none;
+    box-sizing: border-box;
+}
+
+.qr-calc-card:hover {
+    border-color: #CBD5E1;
+    background: #F8FAFC;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+.qr-calc-card.is-active {
+    border-color: var(--theme-color, #22577A) !important;
+    background: rgba(34, 87, 122, 0.03);
+    box-shadow: 0 0 0 1px var(--theme-color, #22577A), 0 4px 14px rgba(34, 87, 122, 0.08);
+}
+
+.qr-calc-radio-wrapper {
+    position: relative;
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.qr-calc-radio {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    margin: 0;
+    pointer-events: none;
+}
+
+.qr-calc-custom-radio {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid #CBD5E1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #FFFFFF;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+}
+
+.qr-calc-card:hover .qr-calc-custom-radio {
+    border-color: #94A3B8;
+}
+
+.qr-calc-card.is-active .qr-calc-custom-radio,
+.qr-calc-radio:checked + .qr-calc-custom-radio {
+    border-color: var(--theme-color, #22577A) !important;
+    background: var(--theme-color, #22577A) !important;
+}
+
+.qr-calc-card.is-active .qr-calc-custom-radio::after,
+.qr-calc-radio:checked + .qr-calc-custom-radio::after {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #FFFFFF;
+    display: block;
+}
+
+.qr-calc-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.qr-calc-title {
+    font-weight: 600;
+    font-size: 14.5px;
+    color: #1E293B;
+    margin-bottom: 4px;
+    line-height: 1.35;
+}
+
+.qr-calc-card.is-active .qr-calc-title {
+    color: var(--theme-color, #22577A);
+}
+
+.qr-calc-desc {
+    font-size: 12.5px;
+    color: #64748B;
+    margin-bottom: 0;
+    line-height: 1.45;
+}
+
+/* --------------------------------------------------------- form switch */
+.form-switch .form-check-input {
+    width: 44px;
+    height: 22px;
+    cursor: pointer;
+    background-color: #CBD5E1;
+    border-color: #CBD5E1;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23fff'/%3e%3c/svg%3e");
+    transition: background-position .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out;
+}
+
+.form-switch .form-check-input:checked {
+    background-color: var(--theme-color, #22577A);
+    border-color: var(--theme-color, #22577A);
+}
+
+.form-switch .form-check-input:focus {
+    border-color: var(--theme-color, #22577A);
+    box-shadow: 0 0 0 0.2rem rgba(34, 87, 122, 0.25);
+}
+
+/* --------------------------------------------------------- RTL support */
+.rtl .input-group > .form-control:not(:last-child) {
+    border-top-left-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+    border-top-right-radius: 4px !important;
+    border-bottom-right-radius: 4px !important;
+}
+
+.rtl .input-group > .input-group-text:not(:first-child),
+.rtl .input-group > .btn:not(:first-child) {
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+    border-top-left-radius: 4px !important;
+    border-bottom-left-radius: 4px !important;
+    border-right: 0;
+    border-left: 1px solid #c9ccd0;
+}
+
+.rtl .qr-calc-card {
+    text-align: right;
+}
+

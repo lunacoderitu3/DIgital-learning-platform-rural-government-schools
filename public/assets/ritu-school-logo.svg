@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" aria-labelledby="title">
+  <title id="title">Ritu School</title>
+  <rect x="4" y="4" width="88" height="88" rx="24" fill="#1e40af"/>
+  <path d="M48 20 15 34l33 14 33-14-33-14Z" fill="#22a06b"/>
+  <path d="M25 43v18c7-4 15-4 23 1 8-5 16-5 23-1V43L48 53 25 43Z" fill="#fff"/>
+  <path d="M48 55v7" stroke="#1e40af" stroke-linecap="round" stroke-width="3"/>
+  <path d="M32 48v8m32-8v8" stroke="#bfdbfe" stroke-linecap="round" stroke-width="2"/>
+  <path d="M80 36v12" stroke="#22a06b" stroke-linecap="round" stroke-width="3"/>
+  <circle cx="80" cy="51" r="2" fill="#22a06b"/>
+</svg>

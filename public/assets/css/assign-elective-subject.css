@@ -1,0 +1,21 @@
+#validation-message.hidden,
+#validation-message[style*="display: none"],
+#validation-message[style*="visibility: hidden"] {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    height: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+    border: none !important;
+    line-height: 0 !important;
+}
+
+#validation-message.hidden *,
+#validation-message[style*="display: none"] *,
+#validation-message[style*="visibility: hidden"] * {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+}

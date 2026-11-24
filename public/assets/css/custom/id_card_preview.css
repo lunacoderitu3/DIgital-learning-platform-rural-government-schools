@@ -1,0 +1,539 @@
+.id-card-builder-container {
+    height: 75vh;
+    min-height: 600px;
+    background: #f4f5f7;
+    border: 1px solid #e1e5eb;
+    border-radius: 8px;
+    overflow: hidden;
+    overflow-x: hidden;
+    margin: 0;
+}
+
+.id-card-settings-panel {
+    background: #ffffff;
+    border-right: 1px solid #e1e5eb;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.id-card-settings-header {
+    padding: 20px;
+    border-bottom: 1px solid #e1e5eb;
+    background: #fff;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.id-card-settings-body {
+    padding: 20px;
+    flex-grow: 1;
+}
+
+.id-card-settings-footer {
+    padding: 20px;
+    border-top: 1px solid #e1e5eb;
+    background: #fff;
+    position: sticky;
+    bottom: 0;
+    z-index: 10;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.id-card-preview-area {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 20px;
+    background: #f4f5f7;
+    overflow-y: auto;
+    position: relative;
+    gap: 30px;
+}
+
+.id-card-preview-toolbar {
+    position: sticky;
+    top: 10px;
+    background: #fff;
+    border-radius: 30px;
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    z-index: 10;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.id-card-preview-toolbar button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #6c757d;
+    padding: 4px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.id-card-preview-toolbar button:hover {
+    background: #f1f3f5;
+    color: #212529;
+}
+
+.live-preview-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #10b981;
+}
+
+.live-preview-badge::before {
+    content: '';
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background: #10b981;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4);
+    }
+
+    70% {
+        box-shadow: 0 0 0 6px rgba(16, 185, 129, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+    }
+}
+
+/* ID Card Canvas Rendering */
+.id-card-canvas-wrapper {
+    position: relative;
+    transition: transform 0.2s ease-out;
+    transform-origin: top center;
+    transform: scale(0.7);
+    /* Scale down by default to fit screen */
+}
+
+.id-card-canvas {
+    background: #ffffff;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Base Variables - updated via JS */
+.id-card-canvas {
+    --card-width: 110mm;
+    --card-height: 205mm;
+    --header-color: #E26565;
+    --footer-color: #90B1E0;
+    --header-text-color: #345893;
+    --text-color: #333333;
+    --bg-image: none;
+    --bg-opacity: 1;
+    --font-family: 'Inter', sans-serif;
+    --border-radius: 0px;
+
+    width: var(--card-width);
+    height: var(--card-height);
+    font-family: var(--font-family);
+    color: var(--text-color);
+    border-radius: var(--border-radius);
+}
+
+.id-card-canvas.horizontal {
+    --card-width: 205mm;
+    --card-height: 110mm;
+}
+
+.id-card-bg-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: var(--bg-image);
+    background-size: cover;
+    background-position: center;
+    opacity: var(--bg-opacity);
+    z-index: 0;
+}
+
+.id-card-content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.id-card-body {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.id-card-canvas.horizontal .id-card-body {
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+}
+
+.id-card-canvas.horizontal .id-card-profile {
+    width: 35%;
+    margin-bottom: 0;
+    display: flex;
+    justify-content: center;
+    padding: 0 10px;
+}
+
+.id-card-canvas.horizontal .id-card-fields {
+    width: 65%;
+    padding: 0 10px;
+}
+
+.id-card-canvas.horizontal .id-card-title {
+    margin: 5px 0;
+}
+
+.id-card-header {
+    background-color: var(--header-color);
+    color: var(--header-text-color);
+    padding: 6px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.id-card-header .school-logo {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.id-card-header img.logo {
+    /* max-width: 100%; */
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.id-card-header .school-name {
+    font-size: clamp(10px, 1.2vw, 18px);
+    font-weight: bold;
+    margin: 0;
+    text-transform: uppercase;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+    text-align: left;
+    line-height: 1.2;
+}
+
+.id-card-title {
+    text-align: center;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    margin: 15px 0;
+    text-transform: uppercase;
+}
+
+.id-card-profile {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.id-card-profile img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border: 3px solid #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    background: #f1f3f5;
+}
+
+.id-card-profile.round img {
+    border-radius: 50%;
+}
+
+.id-card-profile.square img {
+    border-radius: 8px;
+}
+
+.id-card-fields {
+    padding: 0 20px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    font-size: 11px;
+}
+
+.id-card-field {
+    display: flex;
+    margin-bottom: 4px;
+}
+
+.id-card-field-label {
+    font-weight: 600;
+    width: 40%;
+}
+
+.id-card-field-value {
+    width: 60%;
+}
+
+.id-card-footer {
+    background-color: var(--footer-color);
+    color: var(--header-text-color);
+    padding: 10px;
+    text-align: center;
+    font-size: 10px;
+    margin-top: auto;
+}
+
+.id-card-signature {
+    text-align: right;
+    padding: 0 20px 10px;
+    font-size: 10px;
+}
+
+.id-card-signature img {
+    max-height: 30px;
+    display: block;
+    margin-left: auto;
+}
+
+/* Form Settings Styling */
+.setting-section {
+    margin-bottom: 25px;
+}
+
+.setting-section-title {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: #495057;
+}
+
+.segmented-control {
+    display: flex;
+    background: #f4f5f7;
+    border-radius: 8px;
+    padding: 4px;
+    gap: 4px;
+}
+
+.segmented-control label {
+    flex: 1;
+    min-width: 0;
+    text-align: center;
+    padding: 8px 4px;
+    margin: 0;
+    cursor: pointer;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #6c757d;
+    transition: all 0.2s;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.segmented-control input[type="radio"] {
+    display: none;
+}
+
+.segmented-control input[type="radio"]:checked+label {
+    background: #fff;
+    color: #0d6efd;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #0d6efd;
+    padding: 7px;
+    /* Adjust padding due to border */
+}
+
+.color-picker-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.color-picker-group label {
+    font-size: 12px;
+    color: #6c757d;
+    margin: 0;
+}
+
+.color-picker-group input[type="color"] {
+    width: 100%;
+    height: 38px;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    padding: 0;
+    cursor: pointer;
+    background-color: #fff;
+}
+
+.color-picker-group input[type="color"]::-webkit-color-swatch-wrapper {
+    padding: 2px;
+}
+
+.color-picker-group input[type="color"]::-webkit-color-swatch {
+    border: none;
+    border-radius: 4px;
+}
+
+
+
+.feature-chips {
+    display: block;
+}
+
+.feature-chip {
+    display: flex;
+    align-items: center;
+    background: #f4f5f7;
+    border: 1px solid #e1e5eb;
+    border-radius: 8px;
+    padding: 10px 15px;
+    font-size: 13px;
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.2s;
+    color: #495057;
+    margin-bottom: 0;
+}
+
+.feature-chip input[type="checkbox"] {
+    display: none;
+}
+
+.feature-chip:has(input[type="checkbox"]:checked) {
+    background: #e8f5e9;
+    border-color: #4caf50;
+    color: #2e7d32;
+}
+
+.feature-chip i.fa-check {
+    background: #10b981;
+    color: #fff;
+    width: 18px;
+    height: 18px;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    font-size: 10px;
+    margin-right: 10px;
+    transition: all 0.2s;
+}
+
+.feature-chip input[type="checkbox"]:not(:checked)+i.fa-check {
+    display: none !important;
+}
+
+/* Range slider styling */
+input[type=range] {
+    -webkit-appearance: none;
+    width: 100%;
+    background: transparent;
+}
+
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: #0d6efd;
+    cursor: pointer;
+    margin-top: -6px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+input[type=range]::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 4px;
+    cursor: pointer;
+    background: #e9ecef;
+    border-radius: 2px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .id-card-builder-container {
+        height: auto;
+        min-height: auto;
+        overflow: visible;
+        display: block;
+        border: none;
+    }
+
+    .id-card-settings-panel {
+        height: auto;
+        max-height: 550px;
+        border-right: none;
+        border-bottom: 1px solid #e1e5eb;
+        border-radius: 8px 8px 0 0;
+    }
+
+    .id-card-settings-header,
+    .id-card-settings-body,
+    .id-card-settings-footer {
+        padding: 15px;
+    }
+
+    .segmented-control label {
+        font-size: 11px;
+        padding: 6px 4px;
+    }
+
+    .id-card-preview-area {
+        height: auto;
+        min-height: 500px;
+        padding: 20px;
+        border-radius: 0 0 8px 8px;
+        border-top: 5px solid #e1e5eb;
+        gap: 20px;
+    }
+
+    .id-card-canvas-wrapper {
+        transform: scale(0.5);
+        /* Scale down more for mobile */
+        margin-top: 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .id-card-canvas-wrapper {
+        transform: scale(0.4);
+    }
+
+    .id-card-preview-area {
+        height: 450px;
+    }
+}

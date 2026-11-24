@@ -1,0 +1,53 @@
+<IfModule mod_rewrite.c>
+    <IfModule mod_negotiation.c>
+        Options -MultiViews -Indexes
+    </IfModule>
+
+    <IfModule mod_headers.c>
+        # Allow any origin BUT NOT "*"
+        SetEnvIf Origin "http(s)?://(.*)$" ORIGIN=$0
+
+        Header always set Access-Control-Allow-Origin %{ORIGIN}e env=ORIGIN
+        Header always set Access-Control-Allow-Credentials "true"
+        Header always set Access-Control-Allow-Methods "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+        Header always set Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With, Accept, Cache-Control, school-code, X-Tracking-Token"
+    </IfModule>
+
+    RewriteEngine On
+
+    # SECURITY: never serve or execute scripts that live in upload directories.
+    # Uploaded content is data, not code. This neutralises any current or future
+    # unrestricted-file-upload bug (CWE-434) before it can become RCE.
+    RewriteRule ^(storage|assets/files|assets/school|uploads)/.*\.(php[0-9s]?|pht|phtml|phar|inc|shtml|cgi|pl|py|rb|sh|asp|aspx|jsp|htaccess|htpasswd)$ - [F,L,NC]
+
+    RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+    RewriteRule ^ https://%1%{REQUEST_URI} [R=301,L]
+    # Handle school-code header
+    RewriteCond %{HTTP:school-code} ^(.*)
+    RewriteRule .* - [E=HTTP_SCHOOL_CODE:%1]
+
+    # Pass Authorization header
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+    # Redirect trailing slash except directories
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} (.+)/$
+    RewriteRule ^ %1 [L,R=301]
+
+    # Front controller
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^ index.php [L]
+</IfModule>
+
+# For images allow *
+<IfModule mod_headers.c>
+    <FilesMatch "\.(jpg|jpeg|png|gif|webp|svg)$">
+        Header always set Access-Control-Allow-Origin "*"
+    </FilesMatch>
+
+    # Do not let the browser sniff an uploaded file into a different type,
+    # and neutralise scripts inside uploaded SVG/HTML.
+    Header always set X-Content-Type-Options "nosniff"
+</IfModule>

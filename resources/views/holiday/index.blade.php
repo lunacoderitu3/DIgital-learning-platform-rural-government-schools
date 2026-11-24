@@ -1,0 +1,272 @@
+@extends('layouts.master')
+
+@section('title')
+    {{ __('holiday') }}
+@endsection
+
+@section('content')
+    <div class="content-wrapper">
+        <div class="page-header">
+            <h3 class="page-title">
+                {{ __('manage_holiday') }}
+            </h3>
+        </div>
+
+        <div class="row">
+            @if (Auth::user()->can('holiday-create'))
+                <div class="col-lg-12 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">
+                                {{ __('create_holiday') }}
+                            </h4>
+                            <form class="create-form pt-3" id="create-form" action="{{ route('holiday.store') }}"
+                                method="POST" novalidate="novalidate" data-success-function="formSuccessFunction">
+                                @csrf
+                                <div class="row">
+                                    <div class="form-group col-sm-12 col-md-6">
+                                        <label>{{ __('date') }} <span class="text-danger">*</span></label>
+                                        {!! Form::text('date', null, [
+                                            'required',
+                                            'placeholder' => __('date'),
+                                            'class' => 'datepicker-popup form-control',
+                                            'autocomplete' => 'off',
+                                            'id' => 'create-date',
+                                        ]) !!}
+                                        <span class="input-group-addon input-group-append">
+                                        </span>
+                                        <div id="create-leave-msg" class="text-danger mt-2"></div>
+                                    </div>
+                                    <div class="form-group col-sm-12 col-md-6">
+                                        <label>{{ __('title') }} <span class="text-danger">*</span></label>
+                                        {!! Form::text('title', null, ['required', 'placeholder' => __('title'), 'class' => 'form-control']) !!}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-sm-12 col-md-12">
+                                        <label>{{ __('description') }}</label>
+                                        {!! Form::textarea('description', null, [
+                                            'rows' => '2',
+                                            'placeholder' => __('description'),
+                                            'class' => 'form-control',
+                                        ]) !!}
+                                    </div>
+                                    <div class="form-group col-12">
+                                        <div class="input-group mb-3">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text py-2">
+                                                    <input type="checkbox" name="send_whatsapp_message"
+                                                        class="cursor-pointer"
+                                                        aria-label="Checkbox for following text input" id="gridCheck">
+                                                </div>
+                                            </div>
+                                            <label
+                                                class="form-control d-flex align-items-center min-height-auto cursor-pointer"
+                                                for="gridCheck">
+                                                {{ __('send_a_notification_to_all_users_in_whatsapp') }}
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <input class="btn btn-theme float-right ml-3" id="create-btn" type="submit"
+                                    value={{ __('submit') }}>
+                                <input class="btn btn-secondary float-right" type="reset" value={{ __('reset') }}>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            @endif
+            @if (Auth::user()->can('holiday-list'))
+                <div class="col-lg-12 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">
+                                {{ __('list_holiday') }}
+                            </h4>
+                            <div class="row" id="toolbar">
+
+                                <div class="form-group col-12 col-sm-12 col-md-3 col-lg-3">
+                                    <label for="filter_month_id" class="filter-menu">{{ __('month') }}</label>
+                                    {!! Form::select('month', ['0' => 'All'] + $months, null, [
+                                        'class' => 'form-control custom-search-select',
+                                        'id' => 'filter_month',
+                                    ]) !!}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <table aria-describedby="mydesc" class='table' id='table_list' data-toggle="table"
+                                        data-url="{{ route('holiday.show', 1) }}" data-click-to-select="true"
+                                        data-side-pagination="server" data-pagination="true"
+                                        data-page-list="[5, 10, 20, 50, 100, 200]" data-search="true"
+                                        data-toolbar="#toolbar" data-show-columns="true" data-show-refresh="true"
+                                        data-fixed-columns="false" data-fixed-number="2" data-fixed-right-number="1"
+                                        data-trim-on-search="false" data-mobile-responsive="true" data-sort-name="id"
+                                        data-sort-order="desc" data-maintain-selected="true" data-export-data-type='all'
+                                        data-show-export="true"
+                                        data-export-options='{ "fileName": "holiday-list-<?= date('d-m-y') ?>
+                                        ","ignoreColumn": ["operate"]}'
+                                        data-query-params="holidayQueryParams">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col" data-field="id" data-sortable="true"
+                                                    data-visible="false">
+                                                    {{ __('id') }}
+                                                </th>
+                                                <th scope="col" data-field="no"> {{ __('no.') }} </th>
+                                                <th scope="col" data-field="date" data-width="150"> {{ __('date') }}
+                                                </th>
+                                                <th scope="col" data-field="title">{{ __('title') }} </th>
+                                                <th scope="col" data-events="tableDescriptionEvents"
+                                                    data-formatter="descriptionFormatter" data-field="description">
+                                                    {{ __('description') }}
+                                                </th>
+                                                @if (Auth::user()->can('holiday-edit') || Auth::user()->can('holiday-delete'))
+                                                    <th data-events="holidayEvents" data-width="150" scope="col"
+                                                        data-field="operate">{{ __('action') }}</th>
+                                                @endif
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="editModal" data-backdrop="static" tabindex="-1" role="dialog"
+        aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel"> {{ __('edit_holiday') }}</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true"><i class="fa fa-close"></i></span>
+                    </button>
+                </div>
+                <form id="formdata" class="edit-form" action="{{ url('holiday') }}" novalidate="novalidate">
+                    @csrf
+                    <div class="modal-body">
+                        <input type="hidden" name="id" id="id">
+                        <div class="row form-group">
+                            <div class="col-sm-12 col-md-12">
+                                <label>{{ __('date') }} <span class="text-danger">*</span></label>
+                                {!! Form::text('date', null, [
+                                    'required',
+                                    'placeholder' => __('date'),
+                                    'class' => 'datepicker-popup form-control',
+                                    'id' => 'edit-date',
+                                ]) !!}
+                                <span class="input-group-addon input-group-append">
+                                </span>
+                                <div id="edit-leave-msg" class="text-danger mt-2"></div>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col-sm-12 col-md-12">
+                                <label>{{ __('title') }} <span class="text-danger">*</span></label>
+                                {!! Form::text('title', null, [
+                                    'required',
+                                    'placeholder' => __('title'),
+                                    'class' => 'form-control',
+                                    'id' => 'edit-title',
+                                ]) !!}
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col-sm-12 col-md-12">
+                                <label>{{ __('description') }}</label>
+                                {!! Form::textarea('description', null, [
+                                    'placeholder' => __('description'),
+                                    'class' => 'form-control',
+                                    'id' => 'edit-description',
+                                ]) !!}
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col-sm-12 col-md-12">
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text py-2">
+                                            <input type="checkbox" name="send_whatsapp_message" class="cursor-pointer"
+                                                aria-label="Checkbox for following text input" id="editGridCheck">
+                                        </div>
+                                    </div>
+                                    <label class="form-control d-flex align-items-center min-height-auto cursor-pointer"
+                                        for="editGridCheck">
+                                        {{ __('send_a_notification_to_all_users_in_whatsapp') }}
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary"
+                            data-bs-dismiss="modal">{{ __('Cancel') }}</button>
+                        <input class="btn btn-theme" type="submit" value={{ __('submit') }}>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+@endsection
+
+@section('js')
+    <script>
+        let schoolDateFormat = "{{ $schoolSettings['date_format'] ?? 'Y-m-d' }}";
+        $(function() {
+            const sessionStart = new Date("{{ $current_sessionYear->getRawOriginal('start_date') }}");
+            const sessionEnd = new Date("{{ $current_sessionYear->getRawOriginal('end_date') }} ");
+
+            $('.datepicker-popup').datepicker({
+                format: 'dd-mm-yyyy',
+                startDate: sessionStart,
+                endDate: sessionEnd,
+                autoclose: true,
+                todayHighlight: true,
+                container: 'body',
+                orientation: "bottom auto",
+                rtl: isRTL()
+            }).on('changeDate', function(e) {
+                var date = $(this).val();
+                var formType = $(this).attr('id') === 'create-date' ? 'create' : 'edit';
+                checkApprovedLeaves(date, formType);
+            });
+
+            function checkApprovedLeaves(date, formType) {
+                if (date) {
+                    $.ajax({
+                        url: "{{ route('holiday.check-approved-leaves') }}",
+                        type: "GET",
+                        data: {
+                            date: date
+                        },
+                        success: function(response) {
+                            var msgDiv = formType === 'create' ? $('#create-leave-msg') : $(
+                                '#edit-leave-msg');
+                            if (response.count > 0) {
+                                msgDiv.html(response.message);
+                            } else {
+                                msgDiv.html('');
+                            }
+                        },
+                        error: function() {
+                            console.error("Error fetching approved leaves count");
+                        }
+                    });
+                }
+            }
+        });
+
+        function formSuccessFunction(response) {
+            setTimeout(() => {
+                $('#create-leave-msg').html('');
+                $('#edit-leave-msg').html('');
+            }, 500);
+        }
+    </script>
+@endsection

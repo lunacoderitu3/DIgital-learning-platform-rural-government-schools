@@ -1,0 +1,244 @@
+:root {
+  --primary-color: var(--theme-color);
+  --secondary-color: #3b82f6;
+  --success-color: #10b981;
+  --warning-color: #f59e0b;
+  --bg-light-gray: #f8fafc;
+  --border-color: #e2e8f0;
+  --text-dark: #0f172a;
+  --text-muted: #64748b;
+}
+
+/* Custom Radio Buttons for Repeat */
+.repeat-radio-group .btn-check:checked+.btn-outline-primary {
+  background-color: var(--primary-color, #1e3a8a);
+  border-color: var(--primary-color, #1e3a8a);
+  color: #ffffff;
+}
+
+.repeat-radio-group .btn-outline-primary {
+  color: var(--text-muted, #64748b);
+  border-color: var(--border-color, #e2e8f0);
+  background-color: #ffffff;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.repeat-radio-group .btn-outline-primary:hover {
+  background-color: #f1f5f9;
+  border-color: var(--border-color, #e2e8f0);
+  color: var(--primary-color, #1e3a8a);
+}
+
+/* Period Cards Checkbox Styling */
+.period-card-checkbox {
+  position: relative;
+  cursor: pointer;
+}
+
+.period-card-checkbox input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.period-card-inner {
+  display: flex;
+  flex-direction: column;
+  padding: 0.75rem 1rem;
+  border: 1.5px solid var(--border-color, #e2e8f0);
+  border-radius: 10px;
+  background-color: #ffffff;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
+}
+
+.period-card-checkbox input[type="checkbox"]:checked+.period-card-inner {
+  border-color: var(--secondary-color, #3b82f6);
+  background-color: #f0fdf4;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.08);
+}
+
+.period-card-checkbox input[type="checkbox"]:checked+.period-card-inner .day-label {
+  color: var(--secondary-color, #3b82f6);
+}
+
+.period-card-checkbox input[type="checkbox"]:checked+.period-card-inner .check-indicator {
+  color: var(--secondary-color, #3b82f6);
+}
+
+.period-card-checkbox input[type="checkbox"]:disabled+.period-card-inner {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.day-label {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--text-dark, #0f172a);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.time-label {
+  font-size: 0.8rem;
+  color: var(--text-muted, #64748b);
+  margin-top: 2px;
+}
+
+.check-indicator {
+  color: #cbd5e1;
+  font-size: 0.9rem;
+  transition: color 0.2s;
+}
+
+/* Custom Form Fields */
+.form-label-custom {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-dark, #0f172a);
+  margin-bottom: 0.5rem;
+}
+
+/* Card Panels */
+.panel-card {
+  background-color: #ffffff;
+  border: 1px solid var(--border-color, #e2e8f0);
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -2px rgba(0, 0, 0, 0.02);
+  margin-bottom: 1.5rem;
+}
+
+.panel-card-header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--border-color, #e2e8f0);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.panel-card-title {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--primary-color, #1e3a8a);
+  margin: 0;
+}
+
+/* Table Improvements */
+.custom-table {
+  font-size: 0.875rem;
+  margin: 0;
+}
+
+
+.custom-table td {
+  padding: 1rem 0.75rem;
+  vertical-align: middle;
+}
+
+/* Custom Action Buttons */
+.btn-action {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  border: none;
+}
+
+.btn-action-delete {
+  background-color: #fef2f2;
+  color: #ef4444;
+}
+
+.btn-action-delete:hover {
+  background-color: #ef4444;
+  color: #ffffff;
+}
+
+/* Status badge style */
+.repeat-badge {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: 50px;
+  font-weight: 500;
+}
+
+/* Search/Toolbar row */
+.filter-row {
+  background-color: #f8fafc;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1.25rem;
+  border: 1px solid var(--border-color, #e2e8f0);
+}
+
+.btn-meeting-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+  background-color: #f0fdf4;
+  color: #16a34a;
+  border: 1px solid #bbf7d0;
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.btn-meeting-link:hover {
+  background-color: #16a34a;
+  color: #ffffff;
+  border-color: #16a34a;
+}
+
+/* Fix border radius for repeat radio group */
+.repeat-radio-group {
+    gap: 0 !important;
+}
+
+.repeat-radio-group .btn {
+    border-radius: 0;
+    margin: 0;
+}
+
+.repeat-radio-group .btn-check:first-of-type + .btn {
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+}
+
+.repeat-radio-group .btn-check:last-of-type + .btn {
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+
+@media (max-width: 767.98px) {
+    .repeat-radio-group {
+        flex-direction: column;
+    }
+
+    .repeat-radio-group .btn-check:first-of-type + .btn {
+        border-top-left-radius: 8px !important;
+        border-top-right-radius: 8px !important;
+        border-bottom-left-radius: 0 !important;
+        border-bottom-right-radius: 0 !important;
+    }
+
+    .repeat-radio-group .btn-check:last-of-type + .btn {
+        border-bottom-left-radius: 8px !important;
+        border-bottom-right-radius: 8px !important;
+        border-top-left-radius: 0 !important;
+        border-top-right-radius: 0 !important;
+    }
+    
+    .repeat-radio-group .btn-check:not(:first-of-type) + .btn {
+        margin-top: -1px;
+        margin-left: 0;
+    }
+}

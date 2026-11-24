@@ -1,0 +1,490 @@
+<?php
+
+use App\Http\Controllers\Api\ApiController;
+use App\Http\Controllers\Api\OnlineClassApiController;
+use App\Http\Controllers\Api\ParentApiController;
+use App\Http\Controllers\Api\QrAttendanceApiController;
+use App\Http\Controllers\Api\StaffApiController;
+use App\Http\Controllers\Api\StudentApiController;
+use App\Http\Controllers\Api\TeacherApiController;
+use App\Http\Controllers\Api\TrasportationApiController;
+use App\Http\Controllers\Api\TransportationTrackingApiController;
+use App\Http\Controllers\SubscriptionWebhookController;
+use App\Http\Controllers\WhatsAppWebhookController;
+use App\Http\Controllers\WebhookController;
+use Illuminate\Support\Facades\Route;
+
+/*
+|--------------------------------------------------------------------------
+| API Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register API routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| is assigned the "api" middleware group. Enjoy building your API!
+|
+*/
+
+/**
+ * Webhook Routes
+ **/
+Route::post('subscription/webhook/stripe', [SubscriptionWebhookController::class, 'stripe']);
+Route::post('subscription/webhook/razorpay', [SubscriptionWebhookController::class, 'razorpay']);
+
+Route::post('webhook/razorpay', [WebhookController::class, 'razorpay']);
+Route::post('webhook/stripe', [WebhookController::class, 'stripe']);
+Route::post('webhook/paystack', [WebhookController::class, 'paystack']);
+Route::post('webhook/flutterwave', [WebhookController::class, 'flutterwave']);
+
+// Meta WhatsApp Cloud API webhook (per school)
+Route::get('whatsapp/webhook/{schoolCode}', [WhatsAppWebhookController::class, 'verify']);
+Route::post('whatsapp/webhook/{schoolCode}', [WhatsAppWebhookController::class, 'receive']);
+
+// Route::group(['middleware' => 'auth:sanctum'], static function () {
+//     Route::post('logout', [ApiController::class, 'logout']);
+// });
+
+Route::group(['middleware' => 'APISwitchDatabase'], static function () {
+    Route::post('logout', [ApiController::class, 'logout']);
+});
+Route::get('fees-due-notification', [ApiController::class, 'sendFeeNotification']);
+
+Route::get('system-settings', [ApiController::class, 'getSystemSettings']);
+Route::get('get-languages', [ApiController::class, 'getLanguages']);
+Route::post('set-languages', [ApiController::class, 'setLanguages']);
+/**
+ * STUDENT APIs
+ **/
+Route::group(['prefix' => 'student'], static function () {
+
+    //Non Authenticated APIs
+    Route::post('login', [StudentApiController::class, 'login']);
+    Route::post('forgot-password', [StudentApiController::class, 'forgotPassword']);
+
+    //Authenticated APIs
+    Route::group(['middleware' => ['APISwitchDatabase', 'checkSchoolStatus']], static function () {
+        Route::get('class-subjects', [StudentApiController::class, 'classSubjects']);
+        Route::get('subjects', [StudentApiController::class, 'subjects']);
+        Route::post('select-subjects', [StudentApiController::class, 'selectSubjects']);
+        Route::get('guradian-details', [StudentApiController::class, 'getGuardianDetails']);
+        Route::get('timetable', [StudentApiController::class, 'getTimetable']);
+        Route::get('lessons', [StudentApiController::class, 'getLessons']);
+        Route::get('lesson-topics', [StudentApiController::class, 'getLessonTopics']);
+        Route::get('assignments', [StudentApiController::class, 'getAssignments']);
+        Route::post('submit-assignment', [StudentApiController::class, 'submitAssignment']);
+        Route::post('delete-assignment-submission', [StudentApiController::class, 'deleteAssignmentSubmission']);
+        Route::get('attendance', [StudentApiController::class, 'getAttendance']);
+        Route::get('announcements', [StudentApiController::class, 'getAnnouncements']);
+        Route::get('get-exam-list', [StudentApiController::class, 'getExamList']); // Exam list Route
+        Route::get('get-exam-details', [StudentApiController::class, 'getExamDetails']); // Exam Details Route
+        Route::get('exam-marks', [StudentApiController::class, 'getExamMarks']); // Exam Details Route
+        Route::get('sliders', [StudentApiController::class, 'getSliders']); // Sliders
+
+        // online exam routes
+        Route::get('get-online-exam-list', [StudentApiController::class, 'getOnlineExamList']); // Get Online Exam List Route
+        Route::get('get-online-exam-questions', [StudentApiController::class, 'getOnlineExamQuestions']); // Get Online Exam Questions Route
+        Route::post('submit-online-exam-answers', [StudentApiController::class, 'submitOnlineExamAnswers']); // Submit Online Exam Answers Details Route
+        Route::get('get-online-exam-result-list', [StudentApiController::class, 'getOnlineExamResultList']); // Online exam result list Route
+        Route::get('get-online-exam-result', [StudentApiController::class, 'getOnlineExamResult']); // Online exam result  Route
+
+        //reports
+        Route::get('get-online-exam-report', [StudentApiController::class, 'getOnlineExamReport']); // Online Exam Report Route
+        Route::get('get-assignments-report', [StudentApiController::class, 'getAssignmentReport']); // Assignment Report Route
+
+        // profile data
+        Route::get('get-profile-data', [StudentApiController::class, 'getProfileDetails']); // Get Profile Data
+
+        // Session Year
+        Route::get('current-session-year', [StudentApiController::class, 'getSessionYear']);
+
+        Route::get('school-settings', [StudentApiController::class, 'getSchoolSettings']);
+
+
+        // student diaries
+        // Route::get('/diaries', [StudentApiController::class, 'getStudentDiaries']);
+        Route::get('/diary-details', [StudentApiController::class, 'showStudentDiaryDetail']);
+        Route::get('/diary-categories', [StudentApiController::class, 'getStudentDiaryCategories']);
+        Route::get('web-sliders', [StudentApiController::class, 'getWebSliders']);
+
+        // Live location of the bus assigned to the logged in student
+        Route::get('transportation/live-tracking', [TransportationTrackingApiController::class, 'myBusTracking']);
+        Route::post('transportation/live-tracking/link', [TransportationTrackingApiController::class, 'createLink']);
+    });
+});
+
+/**
+ * PARENT APIs
+ **/
+Route::group(['prefix' => 'parent'], static function () {
+    //Non Authenticated APIs
+    // Route::group(['middleware' => ['APISwitchDatabase']], static function () {
+    Route::post('login', [ParentApiController::class, 'login']);
+    //Authenticated APIs
+    // Route::group(['middleware' => ['']], static function () {
+    //     Route::get('test', [ParentApiController::class, 'test']);
+    // });
+    Route::group(['middleware' => ['APISwitchDatabase']], static function () {
+        Route::get('test', [ParentApiController::class, 'test']);
+        Route::get('get-data', [ParentApiController::class, 'getParentData']);
+        Route::get('sliders', [ParentApiController::class, 'getSliders']); // Sliders
+
+        Route::group(['middleware' => ['checkChild', 'APISwitchDatabase']], static function () {
+            Route::get('subjects', [ParentApiController::class, 'subjects']);
+            Route::get('class-subjects', [ParentApiController::class, 'classSubjects']);
+            Route::get('timetable', [ParentApiController::class, 'getTimetable']);
+            Route::get('lessons', [ParentApiController::class, 'getLessons']);
+            Route::get('lesson-topics', [ParentApiController::class, 'getLessonTopics']);
+            Route::get('assignments', [ParentApiController::class, 'getAssignments']);
+            Route::get('attendance', [ParentApiController::class, 'getAttendance']);
+
+            Route::post('student/leave', [ParentApiController::class, 'applyLeave']);
+            Route::get('student/leave', [ParentApiController::class, 'getStudentLeave']);
+            Route::post('student/leave/cancel', [ParentApiController::class, 'cancelStudentLeave']);
+
+
+            // Offline Exams
+            Route::get('get-exam-list', [ParentApiController::class, 'getExamList']); // Exam list Route
+            Route::get('get-exam-details', [ParentApiController::class, 'getExamDetails']); // Exam Details Route
+            Route::get('exam-marks', [ParentApiController::class, 'getExamMarks']); //Exam Marks
+
+            // Fees
+
+            Route::group(['prefix' => 'fees'], static function () {
+                Route::get('/', [ParentApiController::class, 'getFees']);
+                Route::post('/compulsory/pay', [ParentApiController::class, 'payCompulsoryFees']);
+                Route::post('/optional/pay', [ParentApiController::class, 'payOptionalFees']);
+                Route::get('/receipt', [ParentApiController::class, 'feesPaidReceiptPDF']);
+                Route::get('/transaction-receipt', [ParentApiController::class, 'transactionReceiptPDF'])->withoutMiddleware(['checkChild']); //Fees Receipt
+                Route::get('/fees-transactions', [ParentApiController::class, 'getFeesTransactions']);
+
+
+                Route::get('/manual/config', [ParentApiController::class, 'getManualPaymentConfig']);
+                Route::post('/manual/compulsory/pay', [ParentApiController::class, 'payCompulsoryManualFees']);
+                Route::post('/manual/optional/pay', [ParentApiController::class, 'payOptionalManualFees']);
+                Route::get('/manual/status', [ParentApiController::class, 'getManualPaymentStatus']);
+            });
+
+
+            // Online Exam
+            Route::get('get-online-exam-list', [ParentApiController::class, 'getOnlineExamList']); // Get Online Exam List Route
+            Route::get('get-online-exam-result-list', [ParentApiController::class, 'getOnlineExamResultList']); // Online exam result list Route
+            Route::get('get-online-exam-result', [ParentApiController::class, 'getOnlineExamResult']); // Online exam result  Route
+
+            // Reports
+            Route::get('get-online-exam-report', [ParentApiController::class, 'getOnlineExamReport']); // Online Exam Report Route
+            Route::get('get-assignments-report', [ParentApiController::class, 'getAssignmentReport']); // Assignment Report Route
+
+            // Session Year
+            Route::get('current-session-year', [ParentApiController::class, 'getSessionYear']);
+            Route::get('school-settings', [ParentApiController::class, 'getSchoolSettings']);
+
+            // profile data
+            Route::get('get-child-profile-data', [ParentApiController::class, 'getChildProfileDetails']); // Get Profile Data
+
+            // Announcements
+            Route::get('announcements', [ParentApiController::class, 'getAnnouncements']);
+
+
+            // student diaries
+            //Route::get('/diaries', [ParentApiController::class, 'getStudentDiaries']);
+            Route::get('/diary-details', [ParentApiController::class, 'showStudentDiaryDetail']);
+            Route::get('/diary-categories', [ParentApiController::class, 'getChildDiaryCategories']);
+
+            // Live location of the bus assigned to the selected child
+            Route::get('transportation/live-tracking', [TransportationTrackingApiController::class, 'myBusTracking']);
+            Route::post('transportation/live-tracking/link', [TransportationTrackingApiController::class, 'createLink']);
+        });
+    });
+    //  });
+});
+
+/**
+ * TEACHER APIs
+ **/
+Route::group(['prefix' => 'teacher'], static function () {
+    //Non Authenticated APIs
+    Route::post('login', [TeacherApiController::class, 'login']);
+    //Authenticated APIs
+    Route::group(['middleware' => ['APISwitchDatabase', 'checkSchoolStatus']], static function () {
+
+        Route::get('subjects', [TeacherApiController::class, 'subjects']);
+
+        //Assignment
+        Route::get('get-assignment', [TeacherApiController::class, 'getAssignment']);
+        Route::post('create-assignment', [TeacherApiController::class, 'createAssignment']);
+        Route::post('update-assignment', [TeacherApiController::class, 'updateAssignment']);
+        Route::post('delete-assignment', [TeacherApiController::class, 'deleteAssignment']);
+
+        //Assignment Submission
+        Route::get('get-assignment-submission', [TeacherApiController::class, 'getAssignmentSubmission']);
+        Route::post('update-assignment-submission', [TeacherApiController::class, 'updateAssignmentSubmission']);
+
+        //File
+        Route::post('delete-file', [TeacherApiController::class, 'deleteFile']);
+        Route::post('update-file', [TeacherApiController::class, 'updateFile']);
+
+        //Lesson
+        Route::get('get-lesson', [TeacherApiController::class, 'getLesson']);
+        Route::post('create-lesson', [TeacherApiController::class, 'createLesson']);
+        Route::post('update-lesson', [TeacherApiController::class, 'updateLesson']);
+        Route::post('delete-lesson', [TeacherApiController::class, 'deleteLesson']);
+
+        //Topic
+        Route::get('get-topic', [TeacherApiController::class, 'getTopic']);
+        Route::post('create-topic', [TeacherApiController::class, 'createTopic']);
+        Route::post('update-topic', [TeacherApiController::class, 'updateTopic']);
+        Route::post('delete-topic', [TeacherApiController::class, 'deleteTopic']);
+
+        //Announcement
+        Route::get('get-announcement', [TeacherApiController::class, 'getAnnouncement']);
+        Route::post('send-announcement', [TeacherApiController::class, 'sendAnnouncement']);
+        Route::post('update-announcement', [TeacherApiController::class, 'updateAnnouncement']);
+        Route::post('delete-announcement', [TeacherApiController::class, 'deleteAnnouncement']);
+
+        Route::get('get-attendance', [TeacherApiController::class, 'getAttendance']);
+        Route::post('submit-attendance', [TeacherApiController::class, 'submitAttendance']);
+
+
+        //Exam
+        Route::get('get-exam-list', [TeacherApiController::class, 'getExamList']); // Exam list Route
+        Route::get('get-exam-details', [TeacherApiController::class, 'getExamDetails']); // Exam Details Route
+        Route::post('submit-exam-marks/subject', [TeacherApiController::class, 'submitExamMarksBySubjects']); // Submit Exam Marks By Subjects Route
+        Route::post('submit-exam-marks/student', [TeacherApiController::class, 'submitExamMarksByStudent']); // Submit Exam Marks By Students Route
+
+        Route::group(['middleware' => ['auth:sanctum', 'checkStudent']], static function () {
+            Route::get('get-student-result', [TeacherApiController::class, 'GetStudentExamResult']); // Student Exam Result
+            Route::get('get-student-marks', [TeacherApiController::class, 'GetStudentExamMarks']); // Student Exam Marks
+        });
+
+        //Student List
+        Route::get('student-list', [TeacherApiController::class, 'getStudentList']);
+        Route::get('student-details', [TeacherApiController::class, 'getStudentDetails']);
+
+        //Schedule List
+        Route::get('teacher_timetable', [TeacherApiController::class, 'getTeacherTimetable']);
+
+        Route::post('class-detail', [TeacherApiController::class, 'getClassDetail']);
+
+        // student diaries categories
+        Route::get('/diary-categories', [TeacherApiController::class, 'getStudentDiaryCategories']);
+        Route::post('/create-diary-category', [TeacherApiController::class, 'createStudentDiaryCategory']);
+        Route::post('/update-diary-category', [TeacherApiController::class, 'updateStudentDiaryCategory']);
+        Route::post('/delete-diary-category', [TeacherApiController::class, 'deleteStudentDiaryCategory']);
+        Route::post('/restore-diary-category', [TeacherApiController::class, 'restoreStudentDiaryCategory']);
+        Route::post('/trash-diary-category', [TeacherApiController::class, 'trashStudentDiaryCategory']);
+
+        // student diaries
+        //Route::get('/diaries', [TeacherApiController::class, 'getStudentDiaries']);
+        Route::post('/create-diary', [TeacherApiController::class, 'createStudentDiary']);
+        Route::post('/delete-diary', [TeacherApiController::class, 'deleteStudentDiary']);
+        Route::post('/remove-student', [TeacherApiController::class, 'removeStudent']);
+
+        // Online Classes APIs
+        Route::group(['prefix' => 'online-classes'], static function () {
+            // Reads — mirror the web admin create form (Subject & Class + Periods)
+            Route::get('/subject-classes', [OnlineClassApiController::class, 'subjectClasses']);
+            Route::get('/periods', [OnlineClassApiController::class, 'periods']);
+            // Writes
+            Route::post('/', [OnlineClassApiController::class, 'store']);
+            Route::post('/update', [OnlineClassApiController::class, 'update']);
+            Route::post('/delete', [OnlineClassApiController::class, 'destroy']);
+        });
+    });
+});
+
+
+// Staff & Teacher APIs
+Route::group(['prefix' => 'staff'], static function () {
+    Route::post('login', [TeacherApiController::class, 'login']);
+
+    Route::group(['middleware' => ['APISwitchDatabase', 'checkSchoolStatus']], static function () {
+        // Payroll
+        Route::get('my-payroll', [StaffApiController::class, 'myPayroll']);
+        Route::get('payroll-slip', [StaffApiController::class, 'myPayrollSlip']);
+        Route::post('payroll-create', [StaffApiController::class, 'storePayroll']);
+        Route::get('payroll-staff-list', [StaffApiController::class, 'staffPayrollList']);
+
+        Route::get('payroll-year', [StaffApiController::class, 'payrollYear']);
+
+        // Student Leave Management — Admin API
+        Route::group(['prefix' => 'student-leave'], static function () {
+            Route::get('/',       [StaffApiController::class, 'getStudentLeaves']);
+            Route::post('/update-status', [StaffApiController::class, 'updateStudentLeaveStatus']);
+        });
+
+
+        Route::get('profile', [StaffApiController::class, 'profile']);
+        Route::get('counter', [StaffApiController::class, 'counter']);
+        Route::get('teachers', [StaffApiController::class, 'teacher']);
+        Route::get('teacher-timetable', [StaffApiController::class, 'teacherTimetable']);
+        Route::get('staffs', [StaffApiController::class, 'staff']);
+
+        // Attendance
+        Route::get('attendance', [StaffApiController::class, 'getAttendance']);
+        Route::get('staff-attendance', [StaffApiController::class, 'getStaffAttendanceData']);
+        Route::post('staff-attendance-store', [StaffApiController::class, 'storeStaffAttendanceData']);
+
+        // QR attendance — the staff member's own scanning flow
+        Route::group(['prefix' => 'qr-attendance'], static function () {
+            Route::get('config', [QrAttendanceApiController::class, 'config']);
+            Route::get('today', [QrAttendanceApiController::class, 'today']);
+            Route::post('punch', [QrAttendanceApiController::class, 'punch']);
+            Route::get('my-attendance', [QrAttendanceApiController::class, 'myAttendance']);
+            Route::get('punches', [QrAttendanceApiController::class, 'punches']);
+        });
+
+        Route::get('leave-request', [StaffApiController::class, 'leaveRequest']);
+        Route::post('leave-approve', [StaffApiController::class, 'leaveApprove']);
+        Route::post('leave-delete', [StaffApiController::class, 'leaveDelete']);
+
+        // Announcement
+        Route::get('get-announcement', [StaffApiController::class, 'getAnnouncement']);
+        Route::post('send-announcement', [StaffApiController::class, 'sendAnnouncement']);
+        Route::post('update-announcement', [StaffApiController::class, 'updateAnnouncement']);
+        Route::post('delete-announcement', [StaffApiController::class, 'deleteAnnouncement']);
+
+        Route::get('student/attendance', [StaffApiController::class, 'studentAttendance']);
+
+
+
+        Route::get('roles', [StaffApiController::class, 'getRoles']);
+        Route::get('users', [StaffApiController::class, 'getUsers']);
+        Route::post('notification', [StaffApiController::class, 'storeNotification']);
+        Route::get('notification', [StaffApiController::class, 'getNotification']);
+        Route::post('notification-delete', [StaffApiController::class, 'deleteNotification']);
+
+        Route::get('get-fees', [StaffApiController::class, 'getFees']);
+        Route::get('fees-paid-list', [StaffApiController::class, 'getFeesPaidList']);
+
+        Route::get('student-offline-exam-result', [StaffApiController::class, 'getOfflineExamResult']);
+        Route::get('features-permission', [StaffApiController::class, 'getFeaturesPermissions']);
+
+        Route::get('class-timetable', [StaffApiController::class, 'getClassTimetable']);
+
+        Route::get('student-fees-receipt', [StaffApiController::class, 'feesReceipt']);
+        Route::get('allowances-deductions', [StaffApiController::class, 'allowancesDeductions']);
+
+        // tasks APIs
+        Route::group(['prefix' => 'tasks'], static function () {
+            Route::get('/', [StaffApiController::class, 'getTasks']);
+            Route::post('/', [StaffApiController::class, 'storeTask']);
+            Route::post('/update', [StaffApiController::class, 'updateTask']);
+            Route::post('/delete', [StaffApiController::class, 'deleteTask']);
+            Route::post('/status', [StaffApiController::class, 'updateTaskStatus']);
+        });
+
+        Route::get('users-role-wise', [StaffApiController::class, 'getUsersRoleWise']);
+    });
+});
+
+/**
+ * GENERAL APIs
+ **/
+Route::get('settings', [ApiController::class, 'getSettings']);
+Route::post('forgot-password', [ApiController::class, 'forgotPassword']);
+
+Route::get('school-details', [ApiController::class, 'schoolDetails']);
+
+Route::get('firebase-config', [ApiController::class, 'getFirebaseConfig']);
+
+/**
+ * Live tracking WebView handoff.
+ *
+ * Redeems a tracking token minted by transportation/live-tracking/link.
+ * Deliberately outside APISwitchDatabase : the WebView sends only the
+ * X-Tracking-Token header, and the school database is resolved from the token.
+ */
+Route::get('transportation/live-tracking/session', [TransportationTrackingApiController::class, 'session']);
+
+// Route::group(['middleware' => ['auth:sanctum',]], static function () {
+Route::group(['middleware' => ['APISwitchDatabase',]], static function () {
+    Route::get('school-settings', [ApiController::class, 'getSchoolSettings']);
+    Route::get('holidays', [ApiController::class, 'getHolidays']);
+    Route::post('change-password', [ApiController::class, 'changePassword']);
+    // Route::get('test', [ApiController::class, 'getPaymentMethod']);
+    Route::get('payment-confirmation', [ApiController::class, 'getPaymentConfirmation'])->name('payment-confirmation');
+    Route::get('payment-transactions', [ApiController::class, 'getPaymentTransactions'])->name('payment-transactions');
+    Route::get('gallery', [ApiController::class, 'getGallery']);
+    Route::get('session-years', [ApiController::class, 'getSessionYear']);
+    //  Route::get('features', [ApiController::class, 'getFeatures']);
+
+    // Leaves
+    Route::get('leaves', [ApiController::class, 'getLeaves']);
+    Route::post('leaves', [ApiController::class, 'applyLeaves']);
+    Route::get('my-leaves', [ApiController::class, 'getMyLeaves']);
+    Route::post('delete-my-leaves', [ApiController::class, 'deleteLeaves']);
+    Route::get('staff-leaves-details', [ApiController::class, 'getStaffLeaveDetail']);
+    Route::get('leave-settings', [ApiController::class, 'leaveSettings']);
+
+    Route::get('medium', [ApiController::class, 'getMedium']);
+    Route::get('classes', [ApiController::class, 'getClass']);
+
+    // country code list API
+    Route::get('country-codes', [ApiController::class, 'getCountryCodes']);
+
+    Route::post('update-profile', [ApiController::class, 'updateProfile']);
+    Route::get('student-exan-result-pdf', [ApiController::class, 'getExamResultPdf']);
+
+    Route::post('message', [ApiController::class, 'sendMessage']);
+    Route::get('message', [ApiController::class, 'getMessage']);
+    Route::post('delete/message', [ApiController::class, 'deleteMessage']);
+    Route::post('message/read', [ApiController::class, 'readMessage']);
+
+    // Get users from role
+    // Student, Teacher, Guardian, Other Staff [Teachers / School Staff]
+    // Get all users
+    Route::get('users', [ApiController::class, 'getUsers']);
+    Route::post('users-by-role', [ApiController::class, 'getUsersByRoles']);
+    Route::get('teachers', [ApiController::class, 'getTeachers']);
+    Route::get('notifications', [ApiController::class, 'getNotifications']);
+
+
+    // Transportation
+    Route::get('users/chat/history', [ApiController::class, 'usersChatHistory']);
+    Route::post('class-section/teachers', [ApiController::class, 'classSectionTeachers']);
+    Route::get('student-details', [ApiController::class, 'getStudentDetails']);
+    Route::get('pickup-points', [TrasportationApiController::class, 'pickupPoints']);
+    Route::get('transportation-fees', [TrasportationApiController::class, 'transportation_fees']);
+    Route::get('transportation-shifts', [TrasportationApiController::class, 'transportation_shifts']);
+    Route::post('transportation/live-route', [TrasportationApiController::class, 'pickupPointsTrack']);
+    Route::post('transport/dashboard', [TrasportationApiController::class, 'getTransportationData']);
+    Route::post('transport/plans/current', [TrasportationApiController::class, 'getTransoprtationCurrentPlan']);
+    // Route::post('transport/receipt', [TrasportationApiController::class, 'transportationReceipt']);
+    Route::post('transport/routes/stops', [TrasportationApiController::class, 'getTransoprtationRouteForUser']);
+    Route::post('transport/attendance/user-list', [TrasportationApiController::class, 'getTransoprtationAttendanceUsers']);
+    Route::post('transport/attendance/create', [TrasportationApiController::class, 'getTransoprtationAttendanceStore']);
+    Route::post('transport/requests', [TrasportationApiController::class, 'getTransportationRequests']);
+    Route::post('transportation-requests', [TrasportationApiController::class, 'transportation_requests']);
+    Route::post('transportation-payments', [TrasportationApiController::class, 'transportation_payments']);
+    Route::post('create-transportation-expense', [TrasportationApiController::class, 'transportation_expense_create']);
+    Route::get('get-transportation-expense', [TrasportationApiController::class, 'transportation_expense_get']);
+    Route::get('transport/expense/categories/list', [TrasportationApiController::class, 'getTransportationExpenseCategory']);
+    Route::get('driver-helpr/dashboard', [TrasportationApiController::class, 'getDriverHelperDashboard']);
+    Route::get('driver-helpr/get-vehicle-details', [TrasportationApiController::class, 'getVehicleDetails']);
+    Route::get('driver-helpr/get-trips', [TrasportationApiController::class, 'getDriverHelperTrips']);
+    Route::post('driver-helpr/trip/start-end', [TrasportationApiController::class, 'tripStartEnd']);
+    Route::post('get-vehicle-assignment-status', [TrasportationApiController::class, 'getvehicleAssignmentstatus']);
+    Route::post('transport/user/attendance-list', [TrasportationApiController::class, 'getTransportationAteendaceRecordForUser']);
+    Route::get('transport/trip-reports', [TrasportationApiController::class, 'getTripReports']);
+    Route::post('transport/store-trip-reports', [TrasportationApiController::class, 'storeTripReport']);
+
+    // Transportation live tracking (locations are cached, never stored in DB)
+    Route::post('transportation/trip/location', [TransportationTrackingApiController::class, 'updateLocation']);
+    Route::get('transportation/trip/current', [TransportationTrackingApiController::class, 'currentTrip']);
+    Route::get('transportation/live-tracking', [TransportationTrackingApiController::class, 'liveTracking']);
+    Route::get('transportation/live-tracking/my-bus', [TransportationTrackingApiController::class, 'myBusTracking']);
+    // WebView handoff : mints the short lived link opened by the student / parent app
+    Route::post('transportation/live-tracking/link', [TransportationTrackingApiController::class, 'createLink']);
+
+    Route::get('diaries', [ApiController::class, 'getStudentDiaries']);
+    Route::get('certificates', [ApiController::class, 'getCertificates']);
+    Route::post('certificate/assign', [ApiController::class, 'certificateAssign']);
+    Route::get('student/id-card', [ApiController::class, 'getStudentIdCard']);
+    Route::get('staff/id-card', [ApiController::class, 'getStaffIdCard']);
+    Route::get('student/report', [StudentApiController::class, 'getStudentReport']);
+    Route::get('semester', [ApiController::class, 'getSemester']);
+    Route::get('profile', [ApiController::class, 'getUserProfile']);
+});
+Route::post('certificate/generate', [ApiController::class, 'certificateGenerate']);
+
+Route::post('transport/receipt', [TrasportationApiController::class, 'transportationReceipt']);

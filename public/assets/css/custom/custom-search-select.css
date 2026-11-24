@@ -1,0 +1,191 @@
+/* Container styling for the custom search select */
+.custom-select-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+/* Stylized trigger button resembling a standard form-select */
+.custom-select-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0.375rem 2.25rem 0.375rem 0.75rem;
+    /* padding: 0.62rem .75rem; */
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #212529;
+    background-color: #fff;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 16px 12px;
+    border: 1px solid #ced4da;
+    border-radius: 0.375rem;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    cursor: pointer;
+    text-align: left;
+    user-select: none;
+}
+
+.custom-select-trigger:focus {
+    border-color: #86b7fe;
+    outline: 0;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+/* Custom dropdown menu style */
+.custom-select-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 1050;
+    display: none;
+    min-width: 100%;
+    margin-top: 0.125rem;
+    background-color: #fff;
+    border: 1px solid rgba(0, 0, 0, .15);
+    border-radius: 0.375rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    max-height: 350px;
+    overflow: hidden;
+    flex-direction: column;
+}
+
+.custom-select-dropdown.show {
+    display: flex;
+}
+
+/* Search input container inside the dropdown */
+.custom-select-search-container {
+    padding: 8px;
+    border-bottom: 1px solid #e9ecef;
+    background-color: #f8f9fa;
+}
+
+.custom-select-search-input {
+    width: 100%;
+    padding: 0.375rem 0.75rem;
+    font-size: 0.875rem;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+}
+
+.custom-select-search-input:focus {
+    border-color: #86b7fe;
+    outline: 0;
+    box-shadow: 0 0 0 0.15rem rgba(13, 110, 253, 0.25);
+}
+
+/* Scrollable list of options */
+.custom-select-options-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    overflow-y: auto;
+    max-height: 250px;
+}
+
+/* Scrollbar customization for the options list */
+.custom-select-options-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.custom-select-options-list::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.custom-select-options-list::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 3px;
+}
+
+.custom-select-options-list::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+/* Style for each selectable option */
+.custom-select-option {
+    padding: 8px 12px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: background-color 0.15s, color 0.15s;
+    display: flex;
+    flex-direction: column;
+}
+
+.custom-select-option:hover {
+    background-color: #f1f5f9;
+    color: #0f172a;
+}
+
+.custom-select-option.selected {
+    background-color: #0d6efd;
+    color: #fff !important;
+}
+
+.custom-select-option.selected .option-sub-details {
+    color: rgba(255, 255, 255, 0.75) !important;
+}
+
+/* Helper badge styling to make the dropdown options descriptive */
+.option-sub-details {
+    font-size: 0.75rem;
+    color: #6c757d;
+    margin-top: 2px;
+}
+
+/* Empty state styling */
+.custom-select-no-results {
+    padding: 12px;
+    text-align: center;
+    color: #6c757d;
+    font-size: 0.875rem;
+    display: none;
+}
+
+/* Utility class to visually hide original select while maintaining accessibility */
+.sr-select-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+/* Input group integration for custom-search-select */
+.input-group .custom-select-wrapper {
+    width: auto;
+    flex: 0 0 auto;
+}
+
+.input-group-prepend .custom-select-wrapper,
+.input-group-append .custom-select-wrapper {
+    height: auto;
+}
+
+.input-group .custom-select-wrapper .custom-select-trigger {
+    height: 100%;
+    border-radius: 0.25rem;
+}
+
+.input-group-prepend .custom-select-wrapper .custom-select-trigger {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.input-group-append .custom-select-wrapper .custom-select-trigger {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+
+.input-group-append,
+.input-group-prepend {
+    color: unset !important;
+}

@@ -1,0 +1,258 @@
+:root {
+    --brand-primary: #1b365d;
+    --brand-secondary: #0f172a;
+    --brand-success: #10b981;
+    --brand-warning: #f59e0b;
+    --brand-danger: #ef4444;
+    --brand-light: #f8fafc;
+    --brand-muted: #64748b;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f8fafc;
+    color: #1e293b;
+}
+
+/* Top Branded Navbar Bar */
+.brand-header {
+    background-color: var(--brand-primary);
+    color: white;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Left Navigation Dark Sidebar styles */
+.sidebar-nav {
+    background-color: #0f172a;
+    color: #cbd5e1;
+    min-height: calc(100vh - 56px);
+    border-right: 1px solid #1e293b;
+}
+
+.sidebar-link {
+    color: #94a3b8;
+    font-size: 13px;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.sidebar-link:hover,
+.sidebar-link.active {
+    color: white;
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Custom Cards design tokens */
+.card {
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    border-radius: 8px;
+    background-color: white;
+}
+
+.card-header {
+    background-color: white;
+    border-bottom: 1px solid #e2e8f0;
+    font-weight: 700;
+    color: var(--brand-primary);
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 12px 16px;
+}
+
+/* Custom tab configurations */
+.nav-tabs .nav-link {
+    border: none;
+    color: var(--brand-muted);
+    font-weight: 600;
+    font-size: 13px;
+    padding: 14px 20px;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s ease;
+}
+
+.nav-tabs .nav-link.active {
+    color: var(--brand-primary);
+    border-bottom-color: var(--brand-primary);
+    /* background-color: rgba(27, 54, 93, 0.03); */
+}
+
+/* Live Preview sticky sidebar panel (Matches React premium design) */
+.preview-sticky {
+    position: sticky;
+    position: -webkit-sticky;
+    top: 80px;
+    z-index: 10;
+    height: max-content;
+    align-self: flex-start;
+}
+
+.preview-panel-dark {
+    background-color: #0f172a;
+    color: #f8fafc;
+    border-radius: 12px;
+    border: 1px solid #1e293b;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+/* Custom Form Input Properties */
+.form-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--brand-muted);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    letter-spacing: 0.5px;
+}
+
+/* .form-control, .form-select {
+    font-size: 13px;
+    border-radius: 6px;
+    border-color: #cbd5e1;
+    padding: 8px 12px;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--brand-primary);
+    box-shadow: 0 0 0 2px rgba(27, 54, 93, 0.1);
+} */
+
+/* Ledger custom tooltip decoration */
+.custom-ledger-tooltip {
+    --bs-tooltip-bg: #0f172a;
+    --bs-tooltip-color: #f8fafc;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    text-align: left;
+    font-size: 11px;
+}
+
+/* Toggle button groups */
+.btn-toggle-group {
+    display: flex !important;
+    gap: 12px !important;
+    border: none !important;
+    border-radius: 0 !important;
+    overflow: visible !important;
+    padding: 0 !important;
+    background: transparent !important;
+}
+
+.btn-toggle-group .btn {
+    flex: 1;
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 8px !important;
+    background-color: white !important;
+    color: #475569 !important;
+    font-weight: 600;
+    font-size: 12px;
+    padding: 10px 16px;
+    transition: all 0.2s ease;
+    margin: 0 !important;
+    height: auto !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.btn-toggle-group .btn:hover {
+    background-color: #f1f5f9 !important;
+    color: #1e293b !important;
+    border-color: #94a3b8 !important;
+}
+
+.btn-toggle-group .btn.active {
+    background-color: var(--brand-primary) !important;
+    color: white !important;
+    border-color: var(--brand-primary) !important;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03) !important;
+}
+
+.toast-container {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 1100;
+}
+
+/* Force all ancestors to overflow visible so sticky works.
+   .container-scroller has `overflow: hidden` globally in style.min.css,
+   which kills position:sticky because it creates a non-scrolling
+   containing block. Override on this page only. */
+.container-scroller,
+.page-body-wrapper,
+.main-panel,
+.content-wrapper,
+.tab-content,
+.tab-pane,
+#workspace-pane,
+#workspace-pane>.row,
+#workspace-pane .col-xl-8,
+#workspace-pane .col-lg-7,
+#workspace-pane .col-xl-4,
+#workspace-pane .col-lg-5 {
+    overflow: visible !important;
+}
+
+/* Workspace row must stretch so the sticky column has room to slide */
+#workspace-pane>.row {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: stretch !important;
+}
+
+.preview-sticky {
+    position: -webkit-sticky !important;
+    position: sticky !important;
+    top: 80px !important;
+    z-index: 100 !important;
+    align-self: flex-start !important;
+    width: 100%;
+}
+
+/* Panel = flex column. Title pinned at top of panel,
+   only body region scrolls so summary header always visible. */
+.preview-panel-dark {
+    max-height: calc(100vh - 100px) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+}
+
+.preview-panel-dark>h4 {
+    flex: 0 0 auto;
+}
+
+.preview-panel-dark>#livePreviewContainer,
+.preview-panel-dark>#livePreviewPlaceholder {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: 4px;
+}
+
+.preview-panel-dark ::-webkit-scrollbar {
+    width: 6px;
+}
+
+.preview-panel-dark ::-webkit-scrollbar-thumb {
+    background-color: rgba(148, 163, 184, 0.4);
+    border-radius: 3px;
+}
+
+.preview-panel-dark ::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+body {
+    overflow-x: clip !important;
+}
+
+.nav-tabs .nav-link {
+    background: unset !important;
+}
